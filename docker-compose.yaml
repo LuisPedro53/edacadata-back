@@ -1,0 +1,36 @@
+version: "3"
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: sql_server_database
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=serv123A*
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_server_database:/var/opt/mssql
+    networks:
+      - graphql
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - sqlserver
+    networks:
+      - graphql
+
+volumes:
+  api:
+  sql_server_database:
+
+networks:
+  graphql:

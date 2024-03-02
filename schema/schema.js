@@ -5,35 +5,30 @@ const {
   GraphQLList,
 } = require("graphql");
 
-const AuthorType = new GraphQLObjectType({
-  name: "Author",
+const AlunoType = new GraphQLObjectType({
+  name: "Aluno",
   fields: () => ({
-    name: { type: GraphQLString },
+    nome: { type: GraphQLString },
+    cpf: { type: GraphQLString },
+    email: { type: GraphQLString },
   }),
 });
 
 const Query = new GraphQLObjectType({
   name: "Query",
   fields: {
-    author: {
-      type: AuthorType,
+    aluno: {
+      type: AlunoType,
       args: { id: { type: GraphQLString } },
       resolve(parent, args) {
-        return {
-          name: "John Doe",
-        };
+        // Aqui você deve implementar a lógica para buscar um aluno do banco de dados
+        // Você pode usar args.id para filtrar o aluno
       },
     },
-    authors: {
-      type: new GraphQLList(AuthorType),
-
+    alunos: {
+      type: new GraphQLList(AlunoType),
       resolve(parent, args) {
-        return [
-          {
-            name: "Alef Pereira",
-            name: "Pericles Rosa",
-          },
-        ];
+        // Aqui você deve implementar a lógica para buscar todos os alunos do banco de dados
       },
     },
   },
