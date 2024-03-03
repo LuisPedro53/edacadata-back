@@ -3,32 +3,51 @@ const {
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
+  GraphQLNonNull,
 } = require("graphql");
+
+const { getAlunos, createAluno } = require("../Models/aluno");
 
 const AlunoType = new GraphQLObjectType({
   name: "Aluno",
   fields: () => ({
-    nome: { type: GraphQLString },
-    cpf: { type: GraphQLString },
-    email: { type: GraphQLString },
+    cdAluno: { type: GraphQLString },
+    nmAluno: { type: GraphQLString },
+    cpfAluno: { type: GraphQLString },
+    emailAluno: { type: GraphQLString },
   }),
 });
 
 const Query = new GraphQLObjectType({
   name: "Query",
   fields: {
-    aluno: {
-      type: AlunoType,
-      args: { id: { type: GraphQLString } },
-      resolve(parent, args) {
-        // Aqui você deve implementar a lógica para buscar um aluno do banco de dados
-        // Você pode usar args.id para filtrar o aluno
-      },
-    },
     alunos: {
       type: new GraphQLList(AlunoType),
+      args: {
+        cdAluno: { type: GraphQLString },
+        nmAluno: { type: GraphQLString },
+        cpfAluno: { type: GraphQLString },
+        emailAluno: { type: GraphQLString },
+      },
       resolve(parent, args) {
-        // Aqui você deve implementar a lógica para buscar todos os alunos do banco de dados
+        return getAlunos(args);
+      },
+    },
+  },
+});
+
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    createAluno: {
+      type: AlunoType,
+      args: {
+        nmAluno: { type: new GraphQLNonNull(GraphQLString) },
+        cpfAluno: { type: new GraphQLNonNull(GraphQLString) },
+        emailAluno: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, args) {
+        return createAluno(args);
       },
     },
   },
@@ -36,4 +55,5 @@ const Query = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
   query: Query,
+  mutation: Mutation,
 });

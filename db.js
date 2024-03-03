@@ -3,7 +3,7 @@ const sql = require("mssql");
 const config = {
   user: "sa",
   password: "serv123A*",
-  server: "sqlserver", // Use o nome do serviço aqui
+  server: "sqlserver",
   database: "ALUNO",
   options: {
     encrypt: false,

@@ -1,13 +1,17 @@
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 const schema = require("./schema/schema");
-const { poolPromise } = require("./db.js");
+const { sql, poolPromise } = require("./db.js");
 
 const app = express();
-const port = 8000;
+const port = 8080;
 
 poolPromise
   .then((pool) => {
+    if (!pool) {
+      throw new Error("Erro: pool é undefined");
+    }
+
     app.use(
       "/graphql",
       graphqlHTTP({
