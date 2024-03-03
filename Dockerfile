@@ -6,8 +6,8 @@ WORKDIR /educadata-back
 
 COPY . .
 
-RUN npm install
+RUN chmod +x wait-for-it.sh && npm install
 
-CMD ["node", "index.js"]
+CMD ["./wait-for-it.sh", "sqlserver:1433", "--", "node", "index.js"]
 
-EXPOSE 8000
+EXPOSE 8080
