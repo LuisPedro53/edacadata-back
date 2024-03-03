@@ -66,4 +66,44 @@ async function createAluno(aluno) {
   }
 }
 
-module.exports = { getAlunos, createAluno };
+async function updateAluno(cdAluno, aluno) {
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("cdAluno", sql.VarChar, cdAluno)
+      .input("nmAluno", sql.VarChar, aluno.nmAluno)
+      .input("cpfAluno", sql.VarChar, aluno.cpfAluno)
+      .input("emailAluno", sql.VarChar, aluno.emailAluno)
+      .query(
+        "UPDATE Alunos SET nmAluno = @nmAluno, cpfAluno = @cpfAluno, emailAluno = @emailAluno WHERE cdAluno = @cdAluno"
+      );
+
+    const queryResult = await pool
+      .request()
+      .input("cdAluno", sql.VarChar, cdAluno)
+      .query("SELECT * FROM Alunos WHERE cdAluno = @cdAluno");
+
+    return queryResult.recordset[0];
+  } catch (err) {
+    console.error("Erro ao atualizar aluno", err.message);
+    throw new Error("Falha ao atualizar aluno: " + err.message);
+  }
+}
+
+async function deleteAluno(cdAluno) {
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("cdAluno", sql.VarChar, cdAluno)
+      .query("DELETE FROM Alunos WHERE cdAluno = @cdAluno");
+
+    return result.rowsAffected[0] > 0;
+  } catch (err) {
+    console.error("Erro ao deletar aluno", err.message);
+    throw new Error("Falha ao deletar aluno: " + err.message);
+  }
+}
+
+module.exports = { getAlunos, createAluno, updateAluno, deleteAluno };

@@ -4,9 +4,15 @@ const {
   GraphQLObjectType,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLBoolean,
 } = require("graphql");
 
-const { getAlunos, createAluno } = require("../Models/aluno");
+const {
+  getAlunos,
+  createAluno,
+  updateAluno,
+  deleteAluno,
+} = require("../Models/aluno");
 
 const AlunoType = new GraphQLObjectType({
   name: "Aluno",
@@ -48,6 +54,27 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(parent, args) {
         return createAluno(args);
+      },
+    },
+    updateAluno: {
+      type: AlunoType,
+      args: {
+        cdAluno: { type: new GraphQLNonNull(GraphQLString) },
+        nmAluno: { type: GraphQLString },
+        cpfAluno: { type: GraphQLString },
+        emailAluno: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return updateAluno(args.cdAluno, args);
+      },
+    },
+    deleteAluno: {
+      type: GraphQLBoolean,
+      args: {
+        cdAluno: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, args) {
+        return deleteAluno(args.cdAluno);
       },
     },
   },
