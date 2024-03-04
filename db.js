@@ -4,7 +4,7 @@ const config = {
   user: "sa",
   password: "serv123A*",
   server: "sqlserver",
-  database: "ALUNO",
+
   options: {
     encrypt: false,
   },

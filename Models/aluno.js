@@ -9,6 +9,28 @@ async function getAlunos(filter) {
       throw new Error("Erro: pool é undefined");
     }
 
+    const databaseCheckQuery = `
+      IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'Aluno')
+      BEGIN
+        CREATE DATABASE Aluno;
+      END
+      `;
+
+    await pool.request().query(databaseCheckQuery);
+    await pool.request().query("USE ALUNO");
+
+    const tableCheckQuery = `
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Alunos')
+    BEGIN
+        CREATE TABLE [dbo].Alunos (
+            [cdAluno] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
+            [nmAluno] varchar(250) NOT NULL,
+            [emailAluno] varchar(250) NOT NULL,
+            [cpfAluno] varchar(250) NOT NULL
+        );
+    END`;
+    await pool.request().query(tableCheckQuery);
+
     let query = "SELECT * FROM ALUNOS WHERE 1=1";
     const parameters = {};
 
