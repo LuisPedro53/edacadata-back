@@ -13,16 +13,16 @@ async function getAlunos(filter) {
     const parameters = {};
 
     if (filter.nmAluno) {
-      query += " AND nmAluno = @nmAluno";
-      parameters.nmAluno = filter.nmAluno;
+      query += " AND nmAluno LIKE @nmAluno";
+      parameters.nmAluno = "%" + filter.nmAluno + "%";
     }
     if (filter.cpfAluno) {
-      query += " AND cpfAluno = @cpfAluno";
-      parameters.cpfAluno = filter.cpfAluno;
+      query += " AND cpfAluno LIKE @cpfAluno";
+      parameters.cpfAluno = "%" + filter.cpfAluno + "%";
     }
     if (filter.emailAluno) {
-      query += " AND emailAluno = @emailAluno";
-      parameters.emailAluno = filter.emailAluno;
+      query += " AND emailAluno LIKE @emailAluno";
+      parameters.emailAluno = "%" + filter.emailAluno + "%";
     }
 
     const request = pool.request();
