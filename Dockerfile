@@ -6,7 +6,10 @@ WORKDIR /educadata-back
 
 COPY . .
 
-RUN chmod +x wait-for-it.sh && npm install
+# Remove caracteres de retorno de carro dos arquivos
+RUN sed -i 's/\r$//' wait-for-it.sh && \
+    sed -i 's/\r$//' index.js && \
+    npm install
 
 CMD ["./wait-for-it.sh", "sqlserver:1433", "--", "node", "index.js"]
 
